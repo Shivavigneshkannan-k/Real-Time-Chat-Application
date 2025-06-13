@@ -1,10 +1,8 @@
 import bcrypt from "bcrypt";
 import ApiError from "../utils/ApiError.js";
-import validator from "validator";
-import dotenv from "dotenv";
+import jwt from "jsonwebtoken"
 import User from "../models/user.model.js";
 import ApiResponse from "../utils/ApiResponse.js";
-dotenv.config();
 
 const register = async (req, res, next) => {
   const { username, emailId, password } = req.body;
@@ -45,10 +43,11 @@ const register = async (req, res, next) => {
 };
 
 const logIn = async (req, res, next) => {
-  const user = req.user.toObject();
+  const user = req?.user.toObject();
   delete user?.password;
-  const jwtToken = await user?.generateJWT;
-  
+  const user_id = user?._id
+  const jwtToken = await jwt.sign({user_id},process.env.PRIVATE_KEY,{expiresIn:"1h"});
+  console.log(jwtToken);
   const response = new ApiResponse("successfully logged in",user, 200);
 
   res
