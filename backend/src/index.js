@@ -5,6 +5,7 @@ import dbConnection from "./utils/dbConnect.js";
 import errorHandler from "./middleware/error.middleware.js";
 import authRouter from "./routes/auth.route.js";
 import userRouter from "./routes/user.route.js";
+import messageRouter from "./routes/message.route.js";
 import cookieParser from "cookie-parser";
 const PORT = process.env.PORT || 5000;
 dotenv.config();
@@ -23,6 +24,7 @@ app.use(
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/messages", messageRouter);
 app.use("/", (req, res) => {
   res.status(404).json({ success: false, message: "No such api" });
 });

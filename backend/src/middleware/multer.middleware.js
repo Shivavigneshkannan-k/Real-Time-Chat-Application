@@ -1,6 +1,5 @@
 import multer from "multer";
 import path from "path";
-import ApiError from "../utils/ApiError.js";
 
 // defining the temporary destination for multer
 const storage = multer.diskStorage({
@@ -17,13 +16,4 @@ const storage = multer.diskStorage({
 // instanstiation
 const upload = multer({ storage: storage });
 
-// writing upload as middleware
-const userProfileUpload = (req, res, next) => {
-  upload.single("image")(req, res, (err) => {
-    if (err) {
-      next(new ApiError("File upload failed!!", 500));
-    }
-    next();
-  });
-};
-export { upload, userProfileUpload };
+export { upload };
