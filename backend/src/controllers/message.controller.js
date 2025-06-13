@@ -52,13 +52,25 @@ const sendMessage = async (req, res, next) => {
   res.status(201).json(response);
 };
 const getMessages = async (req, res, next) => {
-  const user_id = req?.user?._id;
+  const my_id = req?.user?._id;
+  const user_id = req?.params?.userId;
 
+  if (!user_id) {
+    throw new ApiError("Invalid user Id", 400);
+  }
+  const toUser = await User.findById(user_id);
+  if (!toUser) {
+    throw new ApiError("No user found, Message can't be send", 400);
+  }
   const userMessages = await Message.find({
-    $or: [{ fromUserId: user_id }, { toUserId: user_id }]
+    $or: [
+      { fromUserId: my_id, toUserId: user_id },
+      { fromUserId: user_id, toUserId: my_id }
+    ]
   });
 
   const response = new ApiResponse("All users messages", userMessages, 200);
   res.status(200).json(response);
 };
+
 export { sendMessage, getMessages };
