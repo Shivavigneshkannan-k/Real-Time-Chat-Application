@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
-import validator from 'validator';
+import validator from "validator";
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
+
 const userSchema = new mongoose.Schema(
   {
     username: {
@@ -29,6 +34,11 @@ const userSchema = new mongoose.Schema(
         }
       }
     },
+    gender: {
+      type: String,
+      enum: ["male", "female", "others"],
+      trim: true
+    },
     photoUrl: {
       type: String,
       default: ""
@@ -41,5 +51,21 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model(User,userSchema);
+userSchema.methods.validatePassword = async function (inputPassword){
+    const user = this;
+    const passwordHash = user.password;
+    const isSamePassword = await bcrypt.compare(inputPassword,passwordHash);
+    return isSamePassword;
+}
+
+userSchema.method.generateJWT = async function(){
+    const user = this;
+    const user_id = user._id;
+    const token = await jwt.sign({user_id},process.env.PRIVATE_KEY,{
+        expiresIn: "1hr"
+    });
+    return token;
+}
+
+const User = mongoose.model("User", userSchema);
 export default User;
