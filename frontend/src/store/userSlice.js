@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { login, logout, signUp } from "./userThunks";
+import { getUserData, login, logout, signUp } from "./userThunks";
 import toast from "react-hot-toast";
 
 const userSlice = createSlice({
@@ -42,6 +42,15 @@ const userSlice = createSlice({
       console.log(state.error)
       toast.error(action.payload);
     });
+    builder.addCase(getUserData.fulfilled,(state,action)=>{
+      state.user = action.payload.data;
+      toast.success(action.payload.message);
+      state.error = "";
+    })
+    builder.addCase(getUserData.rejected,(state,action)=>{
+      state.error = action.payload;
+      toast.error(state.error);
+    })
   }
 });
 

@@ -36,7 +36,8 @@ const logout = createAsyncThunk(
   "user/logout",
   async(_,{rejectWithValue})=>{
     try{
-      const response = await axiosInstance.post("/auth/logout",{});
+      const response = await axiosInstance.post("/auth/logout");
+      console.log(response)
       return response.data.message;
     }
     catch(err){
@@ -45,6 +46,19 @@ const logout = createAsyncThunk(
     }
   }
 )
+
+const getUserData = createAsyncThunk(
+  "user/getme",
+  async(_,{rejectWithValue})=>{
+    try{
+      const response = await axiosInstance.get('/user/me');
+      return response.data;
+    }
+    catch(err){
+      return rejectWithValue(err?.response?.data?.message || "Can't Get User Data");
+    }
+  }
+)
 export {
-    login,signUp,logout
+    login,signUp,logout,getUserData
 }

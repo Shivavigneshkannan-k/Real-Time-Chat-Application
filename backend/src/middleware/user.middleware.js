@@ -1,10 +1,8 @@
 import User from "../models/user.model.js";
 import ApiError from "../utils/ApiError.js";
 import jwt from "jsonwebtoken";
-import ApiResponse from "../utils/ApiResponse.js";
 
 const userAuth = async (req,res,next)=>{
-    try{
         const token = req?.cookies?.jwtToken;
         if(!token){
             throw new ApiError("Session Ended",400);
@@ -16,9 +14,6 @@ const userAuth = async (req,res,next)=>{
         }
         req.user = user;
         next()
-    }catch(err){
-        next(err);
-    }
 }
 
 export {userAuth};

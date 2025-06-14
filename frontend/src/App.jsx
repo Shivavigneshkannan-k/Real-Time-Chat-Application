@@ -5,12 +5,19 @@ import SignupPage from "./Pages/Signup";
 import ErrorPage from "./Pages/Error";
 import { Toaster } from "react-hot-toast";
 import ProfilePage from "./Pages/ProfilePage";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
+import { useEffect } from "react";
+import { getUserData } from "./store/userThunks";
 const App = () => {
   const user = useSelector(store => store.user.user);
-
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    if(!user){
+      dispatch(getUserData());
+    }
+  },[user,dispatch])
   return (
     <>
       <div><Toaster/></div>

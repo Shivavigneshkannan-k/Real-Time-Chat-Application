@@ -5,17 +5,15 @@ import cloudinary from "../utils/cloudinary.js";
 import fs from "fs";
 
 const loggedInUserProfile = async (req, res, next) => {
-  try {
     const user = req?.user?.toObject();
     delete user?.password;
     const response = new ApiResponse("loggedIn user profile", user, 200);
     res.status(200).json(response);
-  } catch (err) {
-    next(err);
-  }
 };
 const getAllUsers = async (req, res, next) => {
-  const users = await User.find().select("-password");
+  const users = await User.find({_id:{
+    $ne:req?.user?._id
+  }}).select("-password");
   const response = new ApiResponse("All user profile", users, 200);
   res.status(200).json(response);
 };
