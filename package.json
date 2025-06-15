@@ -1,0 +1,25 @@
+{
+  "name": "real-time-chat-application",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Shivavigneshkannan-k/Real-Time-Chat-Application#readme",
+  "bugs": {
+    "url": "https://github.com/Shivavigneshkannan-k/Real-Time-Chat-Application/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shivavigneshkannan-k/Real-Time-Chat-Application.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "npm run dev --prefix backend",
+    "client": "npm run dev --prefix frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

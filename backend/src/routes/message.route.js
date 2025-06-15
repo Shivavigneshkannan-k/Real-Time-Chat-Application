@@ -6,7 +6,7 @@ import { imageUpload } from "../utils/multer.util.js";
 const router = Router();
 
 router.route('/:userId').get(userAuth,asyncHandler(getMessages));
-router.route('/').post(userAuth,imageUpload,asyncHandler(sendMessage));
+router.route('/:userId').post(userAuth,imageUpload,asyncHandler(sendMessage));
 
 
 export default router;

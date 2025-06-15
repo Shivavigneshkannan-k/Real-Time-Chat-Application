@@ -6,7 +6,8 @@ import cloudinary from "../utils/cloudinary.js";
 import fs from "fs";
 
 const sendMessage = async (req, res, next) => {
-  const { toUserId, content } = req?.body || {};
+  const { content } = req?.body || {};
+  const toUserId = req?.params?.userId;
   const photoPath = req?.file?.path;
   console.log(photoPath);
   const user_id = req?.user?._id;
@@ -58,7 +59,7 @@ const getMessages = async (req, res, next) => {
   if (!user_id) {
     throw new ApiError("Invalid user Id", 400);
   }
-  const toUser = await User.findById(user_id);
+  const toUser = await User.findById(user_id).select("-password");
   if (!toUser) {
     throw new ApiError("No user found, Message can't be send", 400);
   }
@@ -69,7 +70,7 @@ const getMessages = async (req, res, next) => {
     ]
   });
 
-  const response = new ApiResponse("All users messages", userMessages, 200);
+  const response = new ApiResponse("All users messages", {chat:userMessages,chatUser:toUser}, 200);
   res.status(200).json(response);
 };
 

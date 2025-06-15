@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate} from "react-router";
+import { Routes, Route, Navigate, useLocation} from "react-router";
 import HomePage from "./Pages/Home";
 import LoginPage from "./Pages/Login";
 import SignupPage from "./Pages/Signup";
@@ -13,11 +13,15 @@ import { getUserData } from "./store/userThunks";
 const App = () => {
   const user = useSelector(store => store.user.user);
   const dispatch = useDispatch();
+  const location = useLocation();
+  const authRoutes = ['/login','/signup'];
+  const isAuthRoute = authRoutes.includes(location?.pathname);
+  console.log(isAuthRoute);
   useEffect(()=>{
-    if(!user){
+    if(!user && !isAuthRoute){
       dispatch(getUserData());
     }
-  },[user,dispatch])
+  },[user,dispatch,isAuthRoute])
   return (
     <>
       <div><Toaster/></div>
@@ -29,7 +33,7 @@ const App = () => {
           <Route path="/profile" element={user ? <ProfilePage /> :<Navigate to="/login" replace />} />
           <Route path="*" element={<ErrorPage />} />
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
       </>
   );
 };

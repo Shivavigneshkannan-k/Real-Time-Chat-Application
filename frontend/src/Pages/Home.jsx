@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../store/chatSlice";
 import ChatProfile from "../Components/chatProfile";
 import { MessageCircle, MessageSquare } from "lucide-react";
+import Chat from "./Chat";
 const Home = () => {
   const dispatch = useDispatch();
   const users = useSelector((store) => store.chat.users);
-  console.log(users);
+  const activeUser = useSelector((store) => store.chat.activeUser);
   useEffect(() => {
     if (users.length === 0) {
       dispatch(getAllUsers());
@@ -19,7 +20,7 @@ const Home = () => {
         <h2 className='text-xl p-4 flex gap-2 items-center'>
           Chat <MessageCircle />{" "}
         </h2>
-        <div className=' flex flex-col gap-2 overflow-y-auto'>
+        <div className=' flex flex-col gap-2 overflow-y-auto h-[80%]'>
           {users.length > 0 &&
             users.map((user) => (
               <ChatProfile
@@ -30,10 +31,14 @@ const Home = () => {
         </div>
       </div>
       <div className='bg-base-200 w-full min-h-[80%] m-4 flex justify-center items-center rounded-lg'>
-        <div className="flex justify-center items-center gap-4">
-          <div className='text-4xl'>Select & Chat</div>
-          <MessageSquare size={64} />
-        </div>
+        {activeUser ? (
+          <Chat />
+        ) : (
+          <div className='flex justify-center items-center gap-4'>
+            <div className='text-4xl'>Select & Chat</div>
+            <MessageSquare size={64} />
+          </div>
+        )}
       </div>
     </div>
   );
