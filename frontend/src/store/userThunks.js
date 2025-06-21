@@ -23,8 +23,7 @@ const login = createAsyncThunk(
       const response = await axiosInstance.post("auth/login", {
         emailId,
         password
-      });   
-      
+      });  
       return response.data.data;
     } catch (err) {
       return rejectWithValue(err.response.data.message || "login failed");

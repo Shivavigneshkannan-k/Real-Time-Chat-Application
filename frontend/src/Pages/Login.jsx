@@ -19,7 +19,8 @@ const Login = () => {
     console.log(formData)
     if([emailId,password].some(field => field.trim()==="")){
       return toast.error("All fields are required!!!");
-    }dispatch(login(formData));
+    }
+    dispatch(login(formData))
     
   };
   const handleChange = (e)=>{

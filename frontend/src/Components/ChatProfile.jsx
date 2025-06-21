@@ -7,6 +7,7 @@ const ChatProfile = ({ user }) => {
   const { username, photoUrl,_id } = user;
   const dispatch = useDispatch();
   const activeUser = useSelector(store => store.chat.activeUser);
+  const online = useSelector(store => store.chat.onlineUsers);
   
   return (
     <button className={`btn ${activeUser?._id == _id?"bg-primary":"bg-base-100"} focus:shadow-Secondary focus:shadow-2xl rounded-md flex justify-between py-7`} onClick={()=>{
@@ -20,9 +21,9 @@ const ChatProfile = ({ user }) => {
             alt={"chat user"}
             className='w-10 h-10 rounded-full object-cover'
           />
-          <Circle fill="#10ff07" size={18} strokeWidth={0} className="absolute top-0 -right-2 " />
+          {online.includes(_id) && <Circle fill="#10ff07" size={18} strokeWidth={0} className="absolute top-0 -right-2 " />}
         </div>
-        <p>{username} <span className="text-start opacity-90">(offline)</span></p>
+        <p>{username}</p>
 
       </div>
     </button>

@@ -6,12 +6,14 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     user: null,
-    error: ""
+    error: "",
+    socket: null,
   },
   reducers: {
     addUserData: (state, action) => {
       return action.payload;
     }
+
   },
   extraReducers: (builder) => {
     builder.addCase(signUp.fulfilled, (state, action) => {
@@ -29,7 +31,7 @@ const userSlice = createSlice({
     });
     builder.addCase(login.rejected, (state, action) => {
       state.error = action.payload;
-      toast.error(action.payload);
+      toast.error(action.payload || "error in login");
 
     });
     builder.addCase(logout.fulfilled, (state,action) => {
@@ -40,7 +42,7 @@ const userSlice = createSlice({
     builder.addCase(logout.rejected, (state, action) => {
       state.error = action.payload;
       console.log(state.error)
-      toast.error(action.payload);
+      toast.error(action.payload || "error in logout");
     });
     builder.addCase(getUserData.fulfilled,(state,action)=>{
       state.user = action.payload.data;
@@ -49,10 +51,10 @@ const userSlice = createSlice({
     })
     builder.addCase(getUserData.rejected,(state,action)=>{
       state.error = action.payload;
-      toast.error(state.error);
+      toast.error(state.error || "error in get userDataa");
     })
   }
 });
 
-export const { addUserData } = userSlice.actions;
+export const { addUserData} = userSlice.actions;
 export default userSlice.reducer;

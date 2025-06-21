@@ -1,4 +1,4 @@
-import express from "express";
+import {express,app,server} from "./socket/socket.js"
 import dotenv from "dotenv";
 import cors from "cors";
 import dbConnection from "./utils/dbConnect.js";
@@ -9,8 +9,6 @@ import messageRouter from "./routes/message.route.js";
 import cookieParser from "cookie-parser";
 const PORT = process.env.PORT || 5000;
 dotenv.config();
-
-const app = express();
 
 app.use(cookieParser());
 app.use(express.json());
@@ -34,7 +32,7 @@ app.use(errorHandler);
 const connectSever = async () => {
   const db = await dbConnection();
   if (db) {
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log("server is listening on port ", PORT);
     });
   }

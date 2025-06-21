@@ -36,7 +36,7 @@ const getChat = createAsyncThunk(
   }
 );
 const sendMessage = createAsyncThunk("chat/sendMessage",
-    async(form,{getState,rejectWithValue})=>{
+    async({form,socket},{getState,rejectWithValue})=>{
         try{
             const state = getState();
             const activeUser = state.chat.activeUser;
@@ -46,6 +46,9 @@ const sendMessage = createAsyncThunk("chat/sendMessage",
             const response = await axiosInstance.post(`messages/${activeUser?._id}`,
                 form
             );
+            const responseData = response?.data?.data;
+            const {fromUserId,toUserId,content,photoPublicId,photoUrl} = responseData ||{}; 
+            socket.emit("newMessage", {fromUserId,toUserId,content,photoPublicId,photoUrl});
             return { message: response?.data?.data};
         }catch(err){
             return rejectWithValue(
@@ -61,9 +64,18 @@ const chatSlice = createSlice({
     users: [],
     chat: [],
     activeUser: null,
-    error: ""
+    error: "",
+    onlineUsers: [],
   },
   reducers: {
+    subscribeToChat: (state, action) => {
+      state.chat.push(action.payload);
+    },
+    subscribeToOnlineUsers: (state, action) => {
+      state.onlineUsers = action.payload;
+      console.log("online users", action.payload);
+    },
+
   },
   extraReducers: (builder) => {
     builder.addCase(getAllUsers.fulfilled, (state, action) => {
@@ -77,7 +89,6 @@ const chatSlice = createSlice({
     builder.addCase(getChat.fulfilled, (state, action) => {
       state.chat = action.payload.chat;
       state.activeUser = action.payload.activeUser;
-      console.log(action.payload)
       state.error = "";
     });
     builder.addCase(getChat.rejected, (state, action) => {
@@ -86,7 +97,6 @@ const chatSlice = createSlice({
     });
     builder.addCase(sendMessage.fulfilled, (state, action) => {
       state.chat.push(action.payload.message);
-      console.log(action.payload.message);
       state.error = "";
     });
     builder.addCase(sendMessage.rejected, (state, action) => {
@@ -96,4 +106,5 @@ const chatSlice = createSlice({
   }
 });
 export default chatSlice.reducer;
+export const { subscribeToChat,subscribeToOnlineUsers } = chatSlice.actions;
 export { getAllUsers,getChat,sendMessage };
